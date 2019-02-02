@@ -1,0 +1,113 @@
+Found 13 issues
+
+tenders/hvt/hvt_kvm.c:49: error: NULL_DEREFERENCE
+  pointer `hvb` last assigned on line 46 could be null and is dereferenced by call to `memset()` at line 49, column 5.
+  47.       if (hvb == NULL)
+  48.           err(1, "malloc");
+  49. >     memset(hvb, 0, sizeof (struct hvt_b));
+  50.   
+  51.       hvb->kvmfd = open("/dev/kvm", O_RDWR | O_CLOEXEC);
+
+tenders/hvt/hvt_kvm.c:45: error: NULL_DEREFERENCE
+  pointer `hvt` last assigned on line 42 could be null and is dereferenced by call to `memset()` at line 45, column 5.
+  43.       if (hvt == NULL)
+  44.           err(1, "malloc");
+  45. >     memset(hvt, 0, sizeof (struct hvt));
+  46.       struct hvt_b *hvb = malloc(sizeof (struct hvt_b));
+  47.       if (hvb == NULL)
+
+tenders/hvt/hvt_kvm_x86_64.c:58: error: MEMORY_LEAK
+  memory dynamically allocated to `kvm_cpuid` by call to `calloc()` at line 50, column 17 is not reachable after line 58, column 9.
+  56.           err(1, "KVM: ioctl (GET_SUPPORTED_CPUID) failed");
+  57.   
+  58. >     if (ioctl(hvb->vcpufd, KVM_SET_CPUID2, kvm_cpuid) < 0)
+  59.           err(1, "KVM: ioctl (SET_CPUID2) failed");
+  60.   }
+
+tenders/hvt/hvt_elf.c:219: error: UNINITIALIZED_VALUE
+  The value read from hdr.e_entry was never initialized.
+  217.       free (phdr);
+  218.       close (fd_kernel);
+  219. >     *p_entry = hdr.e_entry;
+  220.       return;
+  221.   
+
+tenders/hvt/hvt_elf.c:142: error: UNINITIALIZED_VALUE
+  The value read from hdr.e_phentsize was never initialized.
+  140.   
+  141.       ph_off = hdr.e_phoff;
+  142. >     ph_entsz = hdr.e_phentsize;
+  143.       ph_cnt = hdr.e_phnum;
+  144.       buflen = ph_entsz * ph_cnt;
+
+tenders/hvt/hvt_elf.c:143: error: UNINITIALIZED_VALUE
+  The value read from hdr.e_phnum was never initialized.
+  141.       ph_off = hdr.e_phoff;
+  142.       ph_entsz = hdr.e_phentsize;
+  143. >     ph_cnt = hdr.e_phnum;
+  144.       buflen = ph_entsz * ph_cnt;
+  145.   
+
+tenders/hvt/hvt_elf.c:141: error: UNINITIALIZED_VALUE
+  The value read from hdr.e_phoff was never initialized.
+  139.           goto out_invalid;
+  140.   
+  141. >     ph_off = hdr.e_phoff;
+  142.       ph_entsz = hdr.e_phentsize;
+  143.       ph_cnt = hdr.e_phnum;
+
+tenders/hvt/hvt_module_gdb.c:161: error: RESOURCE_LEAK
+  resource acquired by call to `socket()` at line 144, column 24 is not released after line 161, column 9.
+  159.       if (bind(listen_socket_fd, (struct sockaddr *)&server_addr,
+  160.                sizeof(server_addr)) == -1) {
+  161. >         err(1, "bind failed");
+  162.           return -1;
+  163.       }
+
+tenders/hvt/hvt_module_gdb.c:166: error: RESOURCE_LEAK
+  resource acquired by call to `socket()` at line 144, column 24 is not released after line 166, column 9.
+  164.        
+  165.       if (listen(listen_socket_fd , 0) == -1) {
+  166. >         err(1, "listen failed");
+  167.           return -1;
+  168.       }
+
+tenders/hvt/hvt_module_gdb.c:176: error: RESOURCE_LEAK
+  resource acquired by call to `socket()` at line 144, column 24 is not released after line 176, column 9.
+  174.       socket_fd = accept(listen_socket_fd, (struct sockaddr *)&client_addr, &len);
+  175.       if (socket_fd == -1) {
+  176. >         err(1, "accept failed");
+  177.           return -1;
+  178.       }
+
+tenders/hvt/hvt_gdb_kvm_x86_64.c:228: error: MEMORY_LEAK
+  memory dynamically allocated to `return` by call to `malloc()` at line 208, column 10 is not reachable after line 228, column 13.
+  226.           /* We only support hardware watchpoints. */
+  227.           if (nr_hw_breakpoints == MAX_HW_BREAKPOINTS)
+  228. >             return NULL;
+  229.           nr_hw_breakpoints++;
+  230.           SLIST_INSERT_HEAD(&hw_breakpoints, bp, entries);
+
+tenders/hvt/hvt_module_gdb.c:250: error: DEAD_STORE
+  The value written to &xmitcsum (type unsigned char) is never used.
+  248.   retry:
+  249.           checksum = 0;
+  250. >         xmitcsum = -1;
+  251.           count = 0;
+  252.   
+
+tenders/hvt/hvt_module_gdb.c:412: error: NULL_DEREFERENCE
+  pointer `packet` last assigned on line 397 could be null and is dereferenced at line 412, column 19.
+  410.   	 * and ‘s’ (step) commands."
+  411.            */
+  412. >         command = packet[0];
+  413.           switch (command) {
+  414.           case 's': {
+
+Summary of the reports
+
+  UNINITIALIZED_VALUE: 4
+     NULL_DEREFERENCE: 3
+        RESOURCE_LEAK: 3
+          MEMORY_LEAK: 2
+           DEAD_STORE: 1

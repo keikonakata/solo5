@@ -70,7 +70,7 @@ void hvt_elf_load(const char *file, uint8_t *mem, size_t mem_size,
 #define HVT_CHECKED_GPA_P(hvt, gpa, sz) \
     hvt_checked_gpa_p((hvt), (gpa), (sz), __FILE__, __LINE__)
 
-inline void *hvt_checked_gpa_p(struct hvt *hvt, hvt_gpa_t gpa, size_t sz,
+static inline void *hvt_checked_gpa_p(struct hvt *hvt, hvt_gpa_t gpa, size_t sz,
         const char *file, int line)
 {
     hvt_gpa_t r;
